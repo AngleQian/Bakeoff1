@@ -215,7 +215,7 @@ public class Main extends PApplet
     private Point getButtonCenter(int i) // for a given button ID, what is its center
     {
         Rectangle rect = getButtonLocation(i);
-        return new Point(rect.x + buttonSize / 2, rect.y + 2 * buttonSize);
+        return new Point(rect.x + buttonSize / 2, rect.y + buttonSize / 2 + 55);
     }
 
     private Rectangle getButtonPaddingBox(int i) // for a given button ID, what is its padding box
@@ -223,10 +223,10 @@ public class Main extends PApplet
     {
         Rectangle rect = getButtonLocation(i);
         return new Rectangle(
-                rect.x - padding / 2,
-                rect.y - padding / 2,
-                rect.width + padding,
-                rect.height + padding);
+                rect.x - padding / 3,
+                rect.y - padding / 3,
+                rect.width + padding * 2 / 3,
+                rect.height + padding * 2 / 3);
     }
 
     private int getClosestButtonID(Point mouseLocation) // find the ID of the button that is closest to the current mouse

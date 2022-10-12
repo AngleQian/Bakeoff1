@@ -100,7 +100,16 @@ public class Main extends PApplet
         text((trialNum + 1) + " of " + trials.size(), 40, 20); //display what trial the user is on
 
         for (int i = 0; i < 16; i++)// for all button
+        {
+            fill(255); //set fill color to white
             drawButton(i); //draw button
+            noFill();
+            stroke(204, 102, 0);
+            drawButtonPaddingBox(i);
+            fill(255, 0, 0);
+            ellipse(getButtonCenter(i).x, getButtonCenter(i).y, 5, 5);
+        }
+
 
         fill(255, 0, 0, 200); // set fill color to translucent red
         ellipse(mouseX, mouseY, 20, 20); //draw user cursor as a circle with a diameter of 20
@@ -170,8 +179,9 @@ public class Main extends PApplet
         Point currCursorPoint = new Point(mouseX, mouseY);
 //        System.out.println("Mouse location " + currCursorPoint.toString());
         int closestButtonID = getClosestButtonID(currCursorPoint);
+        System.out.println("closests button" + str(closestButtonID));
 
-        if (justSnapped && lastSnappedButtonID != -1) {
+        if (justSnapped) {
             Rectangle lastSnappedButtonPaddingBox = getButtonPaddingBox(lastSnappedButtonID);
             boolean isCursorOutsidePaddingBox = !isPointWithinRect(currCursorPoint, lastSnappedButtonPaddingBox);
             if (isCursorOutsidePaddingBox) {
@@ -186,11 +196,15 @@ public class Main extends PApplet
             boolean isCursorWithinPaddingBox = isPointWithinRect(currCursorPoint, closestButtonPaddingBox);
             if (isCursorWithinPaddingBox) {
                 Point buttonCenter = getButtonCenter(closestButtonID);
-                robot.mouseMove(buttonCenter.x, buttonCenter.y);
+                robot.mouseMove(buttonCenter.x, buttonCenter.y + 55);
                 justSnapped = true;
                 lastSnappedButtonID = closestButtonID;
                 System.out.println("Just snapped to " + str(lastSnappedButtonID));
                 System.out.println("Location snapped to is " + buttonCenter.toString());
+                System.out.println("Can snap to " + str(closestButtonID));
+                System.out.println("closestButtonPaddingBox " + closestButtonPaddingBox.toString());
+                System.out.println("closestsButton " + getButtonLocation(closestButtonID).toString());
+                System.out.println("curr Cursor " + currCursorPoint.toString());
             }
         }
     }
@@ -215,7 +229,7 @@ public class Main extends PApplet
     private Point getButtonCenter(int i) // for a given button ID, what is its center
     {
         Rectangle rect = getButtonLocation(i);
-        return new Point(rect.x + buttonSize / 2, rect.y + buttonSize / 2 + 55);
+        return new Point(rect.x + buttonSize / 2, rect.y + buttonSize / 2);
     }
 
     private Rectangle getButtonPaddingBox(int i) // for a given button ID, what is its padding box
@@ -232,9 +246,9 @@ public class Main extends PApplet
     private int getClosestButtonID(Point mouseLocation) // find the ID of the button that is closest to the current mouse
     {
         int buttonID = 0;
-        float minDist = 10000;
+        double minDist = 100000000;
         for (int i = 0; i < 16; ++i) {
-            float dist =  computeDist(mouseLocation, getButtonCenter(i));
+            float dist = computeDist(mouseLocation, getButtonCenter(i));
             if (dist < minDist) {
                 minDist = dist;
                 buttonID = i;
@@ -249,5 +263,13 @@ public class Main extends PApplet
 
     private boolean isPointWithinRect(Point p, Rectangle r) {
         return (r.x <= p.x && p.x <= r.x + r.width && r.y <= p.y && p.y <= r.y + r.height);
+    }
+
+    //you can edit this method to change how buttons appear
+    public void drawButtonPaddingBox(int i)
+    {
+        Rectangle bounds = getButtonPaddingBox(i);
+
+        rect(bounds.x, bounds.y, bounds.width, bounds.height);
     }
 }
